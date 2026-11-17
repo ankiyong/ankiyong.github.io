@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light dark">
+<title>AI로 노래 만들기 – Suno 실습</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Do+Hyeon&family=Noto+Sans+KR:wght@400;500;700&family=Press+Start+2P&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #efecff;
+  --panel: #ffffff;
+  --panel-2: #f6f4ff;
+  --text: #1a1740;
+  --muted: #55507f;
+  --border: #1a1740;
+  --shadow: #1a1740;
+  --night: #241d66;
+  --night-2: #1a1450;
+  --pink: #ff4f9a;
+  --mint: #2ec98a;
+  --sun: #ffd23f;
+  --sky: #3fb8f0;
+  --on-accent: #1a1740;
+  --blank-bg: #fff1b8;
+  --blank-text: #6b3d00;
+  --code-bg: #faf9ff;
+  --header-bg: #241d66;
+  --font-display: "Do Hyeon", "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --font-body: "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", "Segoe UI", sans-serif;
+  --font-pixel: "Press Start 2P", "Courier New", monospace;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0f0d26;
+    --panel: #1b1840;
+    --panel-2: #231f52;
+    --text: #f1efff;
+    --muted: #b6b1e4;
+    --border: #8c84ff;
+    --shadow: #000000;
+    --blank-bg: #4a3a00;
+    --blank-text: #ffe28a;
+    --code-bg: #14112f;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0f0d26;
+  --panel: #1b1840;
+  --panel-2: #231f52;
+  --text: #f1efff;
+  --muted: #b6b1e4;
+  --border: #8c84ff;
+  --shadow: #000000;
+  --blank-bg: #4a3a00;
+  --blank-text: #ffe28a;
+  --code-bg: #14112f;
+}
+*, *::before, *::after { box-sizing: inherit; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 64px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 1.0625rem;
+  line-height: 1.7;
+  -webkit-text-size-adjust: 100%;
+}
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0 0 auto;
+  height: env(safe-area-inset-top, 0px);
+  background: var(--header-bg);
+  z-index: 10;
+}
+img, svg { max-width: 100%; }
+a { color: inherit; }
+:focus-visible { outline: 3px dashed var(--sun); outline-offset: 3px; }
+
+/* ---------- header ---------- */
+.site-nav {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  z-index: 9;
+  background: var(--header-bg);
+  border-bottom: 4px solid #000;
+}
+.site-nav-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 0 16px;
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.site-nav-inner::-webkit-scrollbar { display: none; }
+.site-nav .brand {
+  font-family: var(--font-display);
+  color: var(--sun);
+  font-size: 1.15rem;
+  white-space: nowrap;
+  padding: 12px 14px 12px 0;
+  text-decoration: none;
+}
+.site-nav a.nav-link {
+  color: #e9e6ff;
+  text-decoration: none;
+  font-size: 0.95rem;
+  font-weight: 500;
+  padding: 12px 12px;
+  white-space: nowrap;
+  border-bottom: 4px solid transparent;
+  margin-bottom: -4px;
+}
+.site-nav a.nav-link:hover { color: #fff; border-bottom-color: var(--pink); }
+
+/* ---------- hero ---------- */
+.hero {
+  background:
+    linear-gradient(var(--night-2) 0 0) padding-box,
+    var(--night);
+  background-color: var(--night);
+  background-image:
+    linear-gradient(rgba(255,255,255,0.05) 2px, transparent 2px),
+    linear-gradient(90deg, rgba(255,255,255,0.05) 2px, transparent 2px);
+  background-size: 24px 24px;
+  color: #fff;
+  border-bottom: 4px solid #000;
+}
+.hero-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+  padding: 56px 20px 48px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
+  gap: 32px;
+  align-items: center;
+}
+.hero h1 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(2.8rem, 9vw, 5.6rem);
+  line-height: 1.05;
+  margin: 0 0 16px;
+  letter-spacing: 0.01em;
+  text-shadow: 5px 5px 0 var(--pink);
+}
+.hero p.lead {
+  font-size: clamp(1.1rem, 2.4vw, 1.4rem);
+  margin: 0 0 24px;
+  color: #e6e2ff;
+  max-width: 30em;
+}
+.hero-goals { margin: 0 0 28px; padding: 0; list-style: none; display: grid; gap: 8px; }
+.hero-goals li { display: flex; gap: 10px; align-items: baseline; color: #fff; }
+.hero-goals li::before { content: ""; flex: none; width: 10px; height: 10px; background: var(--sun); transform: translateY(-1px); }
+.hero-actions { display: flex; flex-wrap: wrap; gap: 14px; }
+
+.eq {
+  display: flex;
+  gap: 8px;
+  align-items: flex-end;
+  justify-content: center;
+  height: 240px;
+  padding: 16px;
+  border: 4px solid #000;
+  background: #120d3d;
+  box-shadow: 8px 8px 0 #000;
+}
+.eq .bar {
+  width: clamp(14px, 3.2vw, 22px);
+  height: 100%;
+  background: repeating-linear-gradient(to top, var(--c) 0 14px, transparent 14px 18px);
+  clip-path: inset(var(--off, 40%) 0 0 0);
+  animation: eq-bounce 1.2s steps(7, end) infinite alternate;
+  animation-delay: var(--d, 0s);
+}
+.eq .bar:nth-child(5n+1) { --c: var(--pink); }
+.eq .bar:nth-child(5n+2) { --c: var(--sun); }
+.eq .bar:nth-child(5n+3) { --c: var(--mint); }
+.eq .bar:nth-child(5n+4) { --c: var(--sky); }
+.eq .bar:nth-child(5n+5) { --c: #ffffff; }
+@keyframes eq-bounce {
+  from { clip-path: inset(75% 0 0 0); }
+  to   { clip-path: inset(6% 0 0 0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .eq .bar { animation: none; clip-path: inset(var(--off, 40%) 0 0 0); }
+}
+
+/* ---------- buttons ---------- */
+.btn {
+  font: inherit;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 18px;
+  color: var(--on-accent);
+  background: var(--sun);
+  border: 4px solid #000;
+  box-shadow: 5px 5px 0 #000;
+  cursor: pointer;
+  text-decoration: none;
+  border-radius: 0;
+}
+.btn:hover { filter: brightness(1.06); }
+.btn:active { transform: translate(3px, 3px); box-shadow: 2px 2px 0 #000; }
+.btn.pink { background: var(--pink); }
+.btn.mint { background: var(--mint); }
+.btn.sky  { background: var(--sky); }
+.btn.ghost { background: var(--panel); color: var(--text); border-color: var(--border); box-shadow: 4px 4px 0 var(--shadow); font-size: 1rem; padding: 10px 14px; }
+.btn.small { font-size: 1rem; padding: 9px 13px; box-shadow: 4px 4px 0 #000; }
+
+/* ---------- sections ---------- */
+main { display: block; }
+section.block { max-width: 1080px; margin: 0 auto; padding: 56px 20px 8px; }
+.stage-head { display: flex; align-items: center; gap: 16px; margin: 0 0 8px; }
+.badge {
+  flex: none;
+  width: 56px; height: 56px;
+  display: grid; place-items: center;
+  font-family: var(--font-pixel);
+  font-size: 1.25rem;
+  color: var(--on-accent);
+  background: var(--accent, var(--sun));
+  border: 4px solid #000;
+  box-shadow: 4px 4px 0 #000;
+}
+.stage-head h2 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.9rem, 5vw, 2.7rem);
+  line-height: 1.15;
+  margin: 0;
+}
+.stage-sub { margin: 4px 0 28px; color: var(--muted); max-width: 40em; }
+#install { --accent: var(--sky); }
+#screen  { --accent: var(--sun); }
+#lyrics  { --accent: var(--pink); }
+#melody  { --accent: var(--mint); }
+#make    { --accent: var(--sun); }
+#rules   { --accent: var(--sky); }
+#mission { --accent: var(--pink); }
+
+.panel {
+  background: var(--panel);
+  border: 4px solid var(--border);
+  box-shadow: 6px 6px 0 var(--shadow);
+  padding: 22px;
+}
+.panel + .panel { margin-top: 28px; }
+.panel h3 {
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 1.5rem;
+  margin: 0 0 8px;
+  line-height: 1.25;
+}
+.panel h4 { font-size: 1.05rem; margin: 18px 0 6px; }
+.panel p { margin: 0 0 12px; }
+.panel p:last-child { margin-bottom: 0; }
+.muted { color: var(--muted); }
+.note {
+  border-left: 8px solid var(--accent, var(--sun));
+  background: var(--panel-2);
+  padding: 12px 16px;
+  margin: 16px 0 0;
+  font-size: 0.98rem;
+}
+.note strong { font-weight: 700; }
+
+/* flow */
+.flow { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 22px; margin: 0; padding: 0; list-style: none; }
+.flow li {
+  position: relative;
+  background: var(--panel);
+  border: 4px solid var(--border);
+  box-shadow: 6px 6px 0 var(--shadow);
+  padding: 16px 16px 18px;
+}
+.flow li:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -17px; top: 50%;
+  width: 0; height: 0;
+  border-left: 10px solid var(--border);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  transform: translateY(-50%);
+}
+.flow .ico { display: block; width: 44px; height: 44px; margin-bottom: 8px; color: var(--text); }
+.flow b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.25rem; }
+.flow span.d { display: block; font-size: 0.95rem; color: var(--muted); line-height: 1.5; margin-top: 2px; }
+
+/* install */
+.install-grid { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 32px; align-items: start; }
+.qr-frame {
+  width: clamp(220px, 30vw, 320px);
+  background: #fff;
+  border: 4px solid var(--border);
+  box-shadow: 8px 8px 0 var(--shadow);
+  padding: 6px;
+}
+.qr-frame svg { display: block; width: 100%; height: auto; }
+.qr-cap { margin: 14px 0 0; font-family: var(--font-display); font-size: 1.15rem; text-align: center; width: clamp(220px, 30vw, 320px); }
+.steps { list-style: none; counter-reset: s; margin: 0 0 16px; padding: 0; display: grid; gap: 12px; }
+.steps li { counter-increment: s; display: flex; gap: 12px; align-items: flex-start; }
+.steps li::before {
+  content: counter(s);
+  flex: none;
+  width: 32px; height: 32px;
+  display: grid; place-items: center;
+  font-family: var(--font-pixel);
+  font-size: 0.8rem;
+  background: var(--accent, var(--sun));
+  color: var(--on-accent);
+  border: 3px solid #000;
+}
+.urlbox {
+  display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+  background: var(--code-bg);
+  border: 3px dashed var(--border);
+  padding: 10px 12px;
+  margin-top: 14px;
+}
+.urlbox code { font-size: 0.92rem; word-break: break-all; flex: 1 1 260px; }
+
+/* table */
+.tablewrap { overflow-x: auto; border: 4px solid var(--border); box-shadow: 6px 6px 0 var(--shadow); background: var(--panel); }
+table { border-collapse: collapse; width: 100%; min-width: 640px; font-size: 1rem; }
+th, td { text-align: left; vertical-align: top; padding: 12px 14px; border-bottom: 3px solid var(--border); }
+th { font-family: var(--font-display); font-weight: 400; font-size: 1.15rem; background: var(--panel-2); }
+tr:last-child td { border-bottom: 0; }
+td:first-child { font-weight: 700; white-space: nowrap; }
+
+/* template / example pairs */
+.pair { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; align-items: start; }
+.pair-col { min-width: 0; }
+.out-head { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  line-height: 1;
+  padding: 8px 12px;
+  color: var(--on-accent);
+  border: 3px solid #000;
+  box-shadow: 3px 3px 0 #000;
+}
+.tpl-tag { background: var(--sun); }
+.ex-tag { background: var(--mint); }
+.out {
+  margin: 0;
+  background: var(--code-bg);
+  border: 3px solid var(--border);
+  padding: 14px 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+.blank { background: var(--blank-bg); color: var(--blank-text); padding: 0 4px; font-weight: 700; }
+h4 + .tablewrap { margin-top: 8px; }
+
+/* code blocks */
+.codecard { margin-top: 20px; }
+.codecard + .codecard { margin-top: 24px; }
+.codecard .cc-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.codecard .cc-head b { font-family: var(--font-display); font-weight: 400; font-size: 1.2rem; }
+pre.block-pre {
+  margin: 0;
+  background: var(--code-bg);
+  border: 3px solid var(--border);
+  padding: 14px 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font-family: var(--font-body);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+.cols-2 { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 28px; }
+
+/* fix list */
+.fixes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 22px; margin: 0; padding: 0; list-style: none; }
+.fixes li { background: var(--panel); border: 4px solid var(--border); box-shadow: 6px 6px 0 var(--shadow); padding: 16px 18px; }
+.fixes b { display: block; font-family: var(--font-display); font-weight: 400; font-size: 1.2rem; margin-bottom: 2px; }
+.fixes span { color: var(--muted); font-size: 0.98rem; }
+
+/* rules */
+.rules { margin: 0; padding: 0; list-style: none; display: grid; gap: 14px; }
+.rules li { display: flex; gap: 14px; align-items: flex-start; }
+.rules li::before { content: ""; flex: none; width: 14px; height: 14px; margin-top: 9px; background: var(--pink); border: 3px solid #000; }
+
+/* mission */
+.mission { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+.mission label { display: flex; gap: 14px; align-items: flex-start; cursor: pointer; padding: 12px 14px; border: 3px solid var(--border); background: var(--code-bg); }
+.mission input { appearance: none; -webkit-appearance: none; flex: none; width: 26px; height: 26px; margin: 2px 0 0; border: 3px solid var(--border); background: var(--panel); cursor: pointer; border-radius: 0; display: grid; place-items: center; }
+.mission input:checked { background: var(--mint); border-color: #000; }
+.mission input:checked::after { content: ""; width: 10px; height: 10px; background: #000; }
+.mission input:checked + span { text-decoration: line-through; text-decoration-thickness: 2px; color: var(--muted); }
+.progress { display: flex; align-items: center; gap: 14px; margin: 0 0 16px; }
+.progress .track { flex: 1; height: 22px; border: 3px solid var(--border); background: var(--code-bg); display: flex; gap: 3px; padding: 2px; }
+.progress .track i { flex: 1; background: transparent; }
+.progress .track i.on { background: var(--mint); }
+.progress output { font-family: var(--font-pixel); font-size: 0.8rem; white-space: nowrap; }
+
+footer { max-width: 1080px; margin: 56px auto 0; padding: 24px 20px 56px; color: var(--muted); font-size: 0.92rem; border-top: 4px solid var(--border); }
+
+.toast {
+  position: fixed;
+  left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 24px);
+  transform: translateX(-50%) translateY(20px);
+  background: #000; color: #fff;
+  border: 3px solid var(--sun);
+  padding: 10px 16px;
+  font-weight: 700;
+  opacity: 0; pointer-events: none;
+  transition: opacity .15s, transform .15s;
+  z-index: 50;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 900px) {
+  .hero-inner { grid-template-columns: 1fr; padding-top: 40px; }
+  .eq { height: 180px; }
+  .flow { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .flow li:nth-child(2)::after { display: none; }
+  .install-grid { grid-template-columns: 1fr; }
+  .pair, .cols-2, .fixes { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  body { font-size: 1rem; }
+  .flow { grid-template-columns: 1fr; }
+  .flow li::after { display: none; }
+  .panel { padding: 16px; }
+  .badge { width: 46px; height: 46px; font-size: 1rem; }
+}
+</style>
+</head>
+<body>
+
+<nav class="site-nav" aria-label="강의 단계">
+  <div class="site-nav-inner">
+    <a class="brand" href="#top">Suno 음악 실습</a>
+    <a class="nav-link" href="#flow">흐름</a>
+    <a class="nav-link" href="#install">설치</a>
+    <a class="nav-link" href="#screen">입력창</a>
+    <a class="nav-link" href="#lyrics">가사 프롬프트</a>
+    <a class="nav-link" href="#melody">멜로디 프롬프트</a>
+    <a class="nav-link" href="#make">생성과 수정</a>
+    <a class="nav-link" href="#rules">유의사항</a>
+    <a class="nav-link" href="#mission">실습 미션</a>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="hero-inner">
+    <div>
+      <h1>AI로 노래 만들기</h1>
+      <p class="lead">Suno로 우리 부서 주제가, 캠페인송, 행사 음악을 만들어 봅니다. 프롬프트를 받아 쓰는 대신, 어떤 항목을 담을지 직접 설계합니다.</p>
+      <ul class="hero-goals">
+        <li>Suno 앱을 설치하고 첫 곡을 생성한다</li>
+        <li>빈칸형 템플릿으로 내 곡의 가사 프롬프트를 설계한다</li>
+        <li>같은 채팅에서 가사에 어울리는 스타일(멜로디) 프롬프트를 받는다</li>
+      </ul>
+      <div class="hero-actions">
+        <a class="btn" href="#install">앱 설치부터 시작</a>
+        <a class="btn ghost" href="#lyrics">가사 템플릿 바로 가기</a>
+      </div>
+    </div>
+    <div class="eq" aria-hidden="true" id="eq"></div>
+  </div>
+</header>
+
+<main>
+
+<section class="block" id="flow">
+  <div class="stage-head"><h2>오늘의 제작 순서</h2></div>
+  <p class="stage-sub">노래 한 곡은 네 번의 결정으로 만들어집니다. 앞 단계에서 정한 내용이 다음 단계 프롬프트의 재료가 됩니다.</p>
+  <ol class="flow">
+    <li><span class="ico" data-icon="phone"></span><b>도구 준비</b><span class="d">Suno 앱 설치와 로그인</span></li>
+    <li><span class="ico" data-icon="pencil"></span><b>가사 설계</b><span class="d">분위기와 후렴 문구를 정해 가사 프롬프트 작성</span></li>
+    <li><span class="ico" data-icon="note"></span><b>멜로디 설계</b><span class="d">같은 채팅에서 가사에 어울리는 스타일 프롬프트 받기</span></li>
+    <li><span class="ico" data-icon="play"></span><b>생성과 수정</b><span class="d">들어 보고 한 가지씩만 바꿔 다시 생성</span></li>
+  </ol>
+</section>
+
+<!-- ============ 1. INSTALL ============ -->
+<section class="block" id="install">
+  <div class="stage-head"><div class="badge">1</div><h2>Suno 앱 설치</h2></div>
+  <p class="stage-sub">휴대폰 카메라로 QR 코드를 비추면 Google Play의 Suno 앱 페이지가 열립니다.</p>
+  <div class="panel">
+    <div class="install-grid">
+      <div>
+        <div class="qr-frame"><svg viewBox="0 0 41 41" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Google Play Suno 앱 설치 QR 코드" shape-rendering="crispEdges"><rect width="41" height="41" fill="#fff"/><path fill="#000" d="M4 4h7v1h-7zM12 4h1v1h-1zM16 4h2v1h-2zM21 4h5v1h-5zM27 4h1v1h-1zM30 4h7v1h-7zM4 5h1v1h-1zM10 5h1v1h-1zM12 5h1v1h-1zM15 5h1v1h-1zM18 5h1v1h-1zM20 5h1v1h-1zM22 5h1v1h-1zM26 5h2v1h-2zM30 5h1v1h-1zM36 5h1v1h-1zM4 6h1v1h-1zM6 6h3v1h-3zM10 6h1v1h-1zM14 6h1v1h-1zM16 6h3v1h-3zM26 6h3v1h-3zM30 6h1v1h-1zM32 6h3v1h-3zM36 6h1v1h-1zM4 7h1v1h-1zM6 7h3v1h-3zM10 7h1v1h-1zM12 7h1v1h-1zM14 7h1v1h-1zM17 7h3v1h-3zM21 7h1v1h-1zM27 7h2v1h-2zM30 7h1v1h-1zM32 7h3v1h-3zM36 7h1v1h-1zM4 8h1v1h-1zM6 8h3v1h-3zM10 8h1v1h-1zM14 8h1v1h-1zM17 8h4v1h-4zM23 8h1v1h-1zM26 8h1v1h-1zM28 8h1v1h-1zM30 8h1v1h-1zM32 8h3v1h-3zM36 8h1v1h-1zM4 9h1v1h-1zM10 9h1v1h-1zM13 9h1v1h-1zM16 9h1v1h-1zM18 9h1v1h-1zM21 9h5v1h-5zM28 9h1v1h-1zM30 9h1v1h-1zM36 9h1v1h-1zM4 10h7v1h-7zM12 10h1v1h-1zM14 10h1v1h-1zM16 10h1v1h-1zM18 10h1v1h-1zM20 10h1v1h-1zM22 10h1v1h-1zM24 10h1v1h-1zM26 10h1v1h-1zM28 10h1v1h-1zM30 10h7v1h-7zM12 11h1v1h-1zM14 11h2v1h-2zM19 11h4v1h-4zM26 11h2v1h-2zM4 12h1v1h-1zM6 12h2v1h-2zM9 12h3v1h-3zM14 12h2v1h-2zM18 12h6v1h-6zM25 12h1v1h-1zM27 12h1v1h-1zM30 12h1v1h-1zM33 12h1v1h-1zM35 12h2v1h-2zM4 13h5v1h-5zM20 13h5v1h-5zM27 13h2v1h-2zM30 13h2v1h-2zM33 13h4v1h-4zM5 14h2v1h-2zM8 14h1v1h-1zM10 14h2v1h-2zM22 14h1v1h-1zM24 14h1v1h-1zM26 14h3v1h-3zM30 14h4v1h-4zM35 14h2v1h-2zM5 15h4v1h-4zM11 15h1v1h-1zM14 15h1v1h-1zM16 15h2v1h-2zM19 15h2v1h-2zM22 15h1v1h-1zM24 15h1v1h-1zM31 15h1v1h-1zM33 15h1v1h-1zM35 15h1v1h-1zM4 16h2v1h-2zM7 16h2v1h-2zM10 16h2v1h-2zM14 16h1v1h-1zM19 16h1v1h-1zM21 16h4v1h-4zM26 16h4v1h-4zM31 16h3v1h-3zM6 17h1v1h-1zM8 17h2v1h-2zM11 17h4v1h-4zM16 17h1v1h-1zM18 17h3v1h-3zM23 17h1v1h-1zM25 17h1v1h-1zM28 17h1v1h-1zM31 17h1v1h-1zM33 17h1v1h-1zM35 17h1v1h-1zM9 18h4v1h-4zM20 18h1v1h-1zM22 18h4v1h-4zM28 18h1v1h-1zM30 18h1v1h-1zM32 18h3v1h-3zM4 19h1v1h-1zM8 19h1v1h-1zM11 19h1v1h-1zM14 19h2v1h-2zM23 19h1v1h-1zM25 19h3v1h-3zM29 19h2v1h-2zM34 19h1v1h-1zM8 20h3v1h-3zM12 20h2v1h-2zM15 20h1v1h-1zM18 20h1v1h-1zM20 20h1v1h-1zM24 20h3v1h-3zM28 20h3v1h-3zM32 20h3v1h-3zM6 21h1v1h-1zM11 21h1v1h-1zM13 21h1v1h-1zM19 21h1v1h-1zM21 21h1v1h-1zM26 21h3v1h-3zM30 21h1v1h-1zM32 21h2v1h-2zM36 21h1v1h-1zM4 22h2v1h-2zM10 22h1v1h-1zM17 22h5v1h-5zM24 22h1v1h-1zM30 22h3v1h-3zM34 22h2v1h-2zM5 23h5v1h-5zM11 23h1v1h-1zM14 23h3v1h-3zM19 23h3v1h-3zM26 23h2v1h-2zM29 23h2v1h-2zM32 23h1v1h-1zM36 23h1v1h-1zM5 24h1v1h-1zM9 24h2v1h-2zM17 24h3v1h-3zM21 24h5v1h-5zM28 24h1v1h-1zM31 24h1v1h-1zM33 24h3v1h-3zM4 25h1v1h-1zM6 25h1v1h-1zM9 25h1v1h-1zM11 25h2v1h-2zM20 25h5v1h-5zM27 25h2v1h-2zM30 25h1v1h-1zM33 25h1v1h-1zM36 25h1v1h-1zM6 26h2v1h-2zM9 26h2v1h-2zM13 26h2v1h-2zM16 26h1v1h-1zM18 26h1v1h-1zM22 26h1v1h-1zM24 26h5v1h-5zM30 26h2v1h-2zM34 26h3v1h-3zM5 27h1v1h-1zM7 27h1v1h-1zM11 27h1v1h-1zM13 27h2v1h-2zM17 27h2v1h-2zM22 27h1v1h-1zM24 27h1v1h-1zM27 27h1v1h-1zM29 27h1v1h-1zM31 27h3v1h-3zM35 27h2v1h-2zM4 28h1v1h-1zM8 28h1v1h-1zM10 28h1v1h-1zM12 28h1v1h-1zM15 28h3v1h-3zM19 28h1v1h-1zM21 28h1v1h-1zM23 28h1v1h-1zM26 28h1v1h-1zM28 28h5v1h-5zM35 28h2v1h-2zM12 29h2v1h-2zM19 29h5v1h-5zM25 29h1v1h-1zM27 29h2v1h-2zM32 29h2v1h-2zM35 29h1v1h-1zM4 30h7v1h-7zM12 30h4v1h-4zM18 30h1v1h-1zM20 30h1v1h-1zM23 30h1v1h-1zM25 30h1v1h-1zM27 30h2v1h-2zM30 30h1v1h-1zM32 30h1v1h-1zM4 31h1v1h-1zM10 31h1v1h-1zM12 31h1v1h-1zM15 31h1v1h-1zM19 31h2v1h-2zM24 31h5v1h-5zM32 31h4v1h-4zM4 32h1v1h-1zM6 32h3v1h-3zM10 32h1v1h-1zM13 32h1v1h-1zM15 32h1v1h-1zM22 32h11v1h-11zM34 32h1v1h-1zM36 32h1v1h-1zM4 33h1v1h-1zM6 33h3v1h-3zM10 33h1v1h-1zM12 33h2v1h-2zM15 33h1v1h-1zM17 33h3v1h-3zM26 33h1v1h-1zM31 33h1v1h-1zM33 33h1v1h-1zM36 33h1v1h-1zM4 34h1v1h-1zM6 34h3v1h-3zM10 34h1v1h-1zM12 34h1v1h-1zM14 34h1v1h-1zM18 34h2v1h-2zM21 34h2v1h-2zM24 34h1v1h-1zM26 34h2v1h-2zM30 34h2v1h-2zM34 34h1v1h-1zM4 35h1v1h-1zM10 35h1v1h-1zM13 35h1v1h-1zM16 35h1v1h-1zM18 35h5v1h-5zM26 35h1v1h-1zM28 35h2v1h-2zM31 35h2v1h-2zM36 35h1v1h-1zM4 36h7v1h-7zM12 36h3v1h-3zM19 36h1v1h-1zM21 36h2v1h-2zM25 36h1v1h-1zM27 36h1v1h-1zM29 36h1v1h-1zM32 36h1v1h-1zM34 36h1v1h-1z"/></svg></div>
+        <p class="qr-cap">카메라로 스캔하세요</p>
+      </div>
+      <div>
+        <h3>설치 순서 (Android)</h3>
+        <ol class="steps">
+          <li><span>휴대폰 카메라 또는 QR 스캐너로 왼쪽 코드를 비춥니다. Google Play의 <b>Suno – AI Music &amp; Songs</b> 페이지가 열립니다.</span></li>
+          <li><span><b>설치</b>를 누르고, 끝나면 앱을 엽니다.</span></li>
+          <li><span>화면 안내에 따라 로그인하거나 가입합니다. 무료로 시작할 수 있습니다.</span></li>
+          <li><span>앱 하단의 <b>만들기(Create)</b> 화면이 보이면 준비 끝입니다.</span></li>
+        </ol>
+        <div class="urlbox">
+          <code id="play-url">https://play.google.com/store/apps/details?id=com.suno.android</code>
+          <button class="btn small ghost copy" data-target="#play-url" type="button">링크 복사</button>
+        </div>
+        <div class="note"><strong>스캔이 안 될 때</strong> Play 스토어에서 “Suno”를 검색하고 개발사가 <b>Suno, Inc.</b>인지 확인한 뒤 설치합니다. iPhone은 App Store에서 같은 이름으로 검색하고, 설치가 어려운 PC·보안 환경에서는 웹사이트 <b>suno.com</b>의 만들기 화면을 사용할 수 있습니다.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2. SCREEN ============ -->
+<section class="block" id="screen">
+  <div class="stage-head"><div class="badge">2</div><h2>입력창 이해하기</h2></div>
+  <p class="stage-sub">Suno에는 한 줄 설명만 넣는 간단 모드와, 가사와 스타일을 따로 넣는 사용자 지정(Custom) 모드가 있습니다. 오늘은 Custom 모드로 곡을 직접 설계합니다.</p>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>입력창</th><th>여기에 넣는 것</th><th>오늘 쓸 도구</th></tr></thead>
+      <tbody>
+        <tr><td>가사 (Lyrics)</td><td>[Verse], [Chorus] 같은 구조 태그가 들어간 가사</td><td>3단계 가사 프롬프트로 만든 결과</td></tr>
+        <tr><td>스타일 (Style of Music)</td><td>장르·분위기·템포·보컬·악기를 나타내는 키워드</td><td>4단계 멜로디 프롬프트</td></tr>
+        <tr><td>제목 (Title)</td><td>곡 제목</td><td>가사 첫 줄의 “제목:”</td></tr>
+        <tr><td>제외 (Exclude)</td><td>곡에서 빼고 싶은 요소</td><td>4단계의 제외 항목</td></tr>
+        <tr><td>슬라이더</td><td>Weirdness(실험성), Style Influence(스타일 반영 정도)</td><td>처음에는 기본값 그대로</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="note" style="margin-top:20px"><strong>참고</strong> 앱과 모델은 자주 업데이트되어 화면 이름과 위치가 조금씩 달라질 수 있습니다. 수업 당일 화면이 이 표와 다르면 비슷한 이름의 칸을 찾아 넣으면 됩니다.</div>
+</section>
+
+<!-- ============ 3. LYRICS ============ -->
+<section class="block" id="lyrics">
+  <div class="stage-head"><div class="badge">3</div><h2>가사 프롬프트 템플릿</h2></div>
+  <p class="stage-sub">ChatGPT, Claude, Gemini 같은 대화형 AI에게 가사를 쓰게 하는 프롬프트입니다. 왼쪽 템플릿의 노란 【 】 부분을 내 곡에 맞게 바꿔 쓰고, 오른쪽 예시를 참고하세요.</p>
+  <div class="pair">
+    <div class="pair-col">
+      <div class="out-head"><span class="tag tpl-tag">템플릿</span><button class="btn pink small copy" data-target="#ly-tpl" type="button">복사하기</button></div>
+<pre class="out" id="ly-tpl">Suno에 넣을 한국어 노래 가사를 써 주세요.
+
+1. 분위기: <span class="blank">【예: 따뜻함, 희망, 경쾌함】</span>
+2. 후렴에 넣을 말: <span class="blank">【반복할 문구】</span>
+3. 구성: 1절, 후렴, 2절, 후렴
+4. [Verse], [Chorus] 같은 섹션 태그를 쓰고, 한 줄은 8~16자로 쓰기
+5. 제목 한 줄과 가사만 출력하기</pre>
+    </div>
+    <div class="pair-col">
+      <div class="out-head"><span class="tag ex-tag">예시 – 워크숍 주제가</span><button class="btn mint small copy" data-target="#ly-ex" type="button">복사하기</button></div>
+<pre class="out" id="ly-ex">Suno에 넣을 한국어 노래 가사를 써 주세요.
+
+1. 분위기: 따뜻하고 희망적
+2. 후렴에 넣을 말: “한 걸음씩 함께 가요”
+3. 구성: 1절, 후렴, 2절, 후렴
+4. [Verse], [Chorus] 같은 섹션 태그를 쓰고, 한 줄은 8~16자로 쓰기
+5. 제목 한 줄과 가사만 출력하기</pre>
+    </div>
+  </div>
+  <div class="note"><strong>설계 포인트</strong> 같은 주제라도 화자와 분위기가 달라지면 전혀 다른 가사가 나옵니다. 받은 가사는 소리 내어 읽어 보고, 어색한 줄은 직접 고친 뒤 Suno에 넣으세요. 최종 편집은 사람의 몫입니다.</div>
+</section>
+
+<!-- ============ 4. MELODY ============ -->
+<section class="block" id="melody">
+  <div class="stage-head"><div class="badge">4</div><h2>멜로디 프롬프트 템플릿</h2></div>
+  <p class="stage-sub">Suno는 멜로디를 악보가 아니라 스타일 키워드로 받습니다. 가사를 받은 같은 채팅에서 이어서 요청하면, AI가 그 가사에 어울리는 스타일을 제안합니다.</p>
+  <div class="pair">
+    <div class="pair-col">
+      <div class="out-head"><span class="tag tpl-tag">템플릿</span><button class="btn pink small copy" data-target="#mb-tpl" type="button">복사하기</button></div>
+<pre class="out" id="mb-tpl">위 가사에 어울리는 Suno 스타일 프롬프트를 만들어 주세요.
+
+1. 영어 키워드를 쉼표로 구분하고, 200자 이내로 쓰기
+2. 장르, 분위기, 템포(BPM), 보컬, 악기를 넣고 “Korean vocals” 포함하기
+3. 서로 다른 느낌으로 3가지 제안하기
+4. 각각 제외할 요소(Exclude)를 한 줄씩 덧붙이기</pre>
+    </div>
+    <div class="pair-col">
+      <div class="out-head"><span class="tag ex-tag">예시 – 받게 되는 답변</span><button class="btn mint small copy" data-target="#mb-ex" type="button">복사하기</button></div>
+<pre class="out" id="mb-ex">1. K-pop, warm, hopeful, uplifting, mid-tempo 100 BPM, male and female duet, Korean vocals, acoustic guitar, piano, strings, drums, gradual build to a big final chorus
+   Exclude: rap, heavy distortion, screaming
+
+2. K-ballad, tender, emotional, slow tempo 70 BPM, female vocals, Korean vocals, piano, strings, soft drums, intimate verses and a warm swelling chorus
+   Exclude: EDM drops, rap, shouting
+
+3. acoustic folk, bright, cheerful, upbeat 125 BPM, group chorus, Korean vocals, acoustic guitar, ukulele, light percussion, clap-along chorus
+   Exclude: heavy distortion, dark mood, rap</pre>
+    </div>
+  </div>
+  <div class="note"><strong>설계 포인트</strong> 제안 중 하나를 골라 Suno의 Style of Music 칸에 넣고, “Exclude” 줄은 제외 칸에 넣습니다. 스타일 프롬프트는 길수록 좋은 것이 아니니, 결과를 들어 본 뒤 한 번에 하나씩만 바꿔 보세요.</div>
+</section>
+
+<!-- ============ 5. MAKE ============ -->
+<section class="block" id="make">
+  <div class="stage-head"><div class="badge">5</div><h2>생성하고 다듬기</h2></div>
+  <p class="stage-sub">Custom 모드에서 가사, 스타일, 제목을 각각 넣고 생성합니다. 한 번에 두 곡 안팎이 만들어지니 들어 보고 더 나은 쪽을 고릅니다.</p>
+
+  <ul class="fixes">
+    <li><b>발음이 어색하다</b><span>해당 줄을 짧게 줄이거나 소리 나는 대로 한글로 고쳐 쓰고 다시 생성합니다.</span></li>
+    <li><b>분위기가 다르다</b><span>스타일 키워드 한두 개만 바꿉니다. 한꺼번에 바꾸면 무엇이 효과였는지 알 수 없습니다.</span></li>
+    <li><b>후렴이 약하다</b><span>후렴 문구를 더 짧고 쉽게 바꾸고, 반복 횟수를 늘립니다.</span></li>
+    <li><b>곡이 중간에 끝난다</b><span>구조 태그가 빠지지 않았는지 확인하고, 앱의 이어 만들기(Extend) 기능을 사용합니다.</span></li>
+  </ul>
+
+  <div class="panel" style="margin-top:32px">
+    <h3>완성 예시 – “한 걸음씩 함께” 워크숍 주제가</h3>
+    <p class="muted">3·4단계 예시와 같은 조건으로 Suno에 넣는 최종 값입니다. 가사는 수업용으로 새로 쓴 예시입니다.</p>
+    <div class="cols-2">
+      <div class="codecard">
+        <div class="cc-head"><b>Lyrics 칸</b><button class="btn pink small copy" data-target="#ex-lyrics" type="button">복사하기</button></div>
+<pre class="block-pre" id="ex-lyrics">[Verse 1]
+아침 햇살 따라 사무실 문을 열면
+어제의 숙제들이 책상 위에 앉아 있죠
+커피 한 잔의 온기로 마음을 데우고
+오늘도 우리는 같은 방향을 봐요
+
+[Chorus]
+한 걸음씩 함께 가요
+작은 약속이 길이 되도록
+한 걸음씩 함께 가요
+우리가 만드는 내일을 향해
+
+[Verse 2]
+복잡한 서류 속에 숨은 누군가의 하루
+그 얼굴을 떠올리면 힘이 나는 걸요
+어려운 일 앞에서도 서로 어깨를 빌려주며
+정직한 마음 하나로 문을 열어요
+
+[Chorus]
+한 걸음씩 함께 가요
+작은 약속이 길이 되도록
+한 걸음씩 함께 가요
+우리가 만드는 내일을 향해</pre>
+      </div>
+      <div>
+        <div class="codecard" style="margin-top:20px">
+          <div class="cc-head"><b>Style of Music 칸</b><button class="btn pink small copy" data-target="#ex-style" type="button">복사하기</button></div>
+<pre class="block-pre" id="ex-style">K-pop, warm, hopeful, uplifting, mid-tempo 100 BPM, male and female duet, Korean vocals, acoustic guitar, piano, strings, drums, gradual build to a big final chorus</pre>
+        </div>
+        <div class="codecard">
+          <div class="cc-head"><b>Exclude 칸</b><button class="btn pink small copy" data-target="#ex-excl" type="button">복사하기</button></div>
+<pre class="block-pre" id="ex-excl">rap, heavy distortion, screaming</pre>
+        </div>
+        <div class="codecard">
+          <div class="cc-head"><b>Title 칸</b><button class="btn pink small copy" data-target="#ex-title" type="button">복사하기</button></div>
+<pre class="block-pre" id="ex-title">한 걸음씩 함께</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ RULES ============ -->
+<section class="block" id="rules">
+  <div class="stage-head"><div class="badge">!</div><h2>사용 전에 확인할 것</h2></div>
+  <p class="stage-sub">업무에서 쓰는 음악이라면 만드는 일만큼 쓰는 일도 중요합니다.</p>
+  <div class="panel">
+    <ul class="rules">
+      <li><span><b>이용 범위를 확인합니다.</b> 무료 요금제로 만든 곡은 개인·비상업적 용도로 제한되고, 상업적 이용 권리는 유료 요금제에서 제공됩니다. 기관 홍보물이나 공식 행사에 쓰기 전에 suno.com의 요금제와 이용약관을 확인하세요.</span></li>
+      <li><span><b>실존 가수와 기존 곡을 따라 하지 않습니다.</b> 가수 이름이나 곡명을 프롬프트에 넣어 비슷하게 만들려 하지 말고, 기존 곡의 가사를 그대로 넣거나 타인의 음원을 올릴 때는 사용 권리를 확인합니다.</span></li>
+      <li><span><b>개인정보와 내부 정보를 넣지 않습니다.</b> 민원인 정보, 비공개 업무 내용, 실명은 가사와 프롬프트에 쓰지 않습니다.</span></li>
+      <li><span><b>정치적 중립을 지킵니다.</b> 특정 정당·후보·정치적 구호로 읽힐 수 있는 표현은 넣지 않습니다.</span></li>
+      <li><span><b>AI로 만들었음을 밝힙니다.</b> 대외에 공개하거나 배포할 때는 AI 생성 음악임을 표기하는 것을 권장합니다.</span></li>
+      <li><span><b>요금과 기능은 바뀝니다.</b> 모델 종류, 무료 제공량, 약관은 수시로 달라지므로 수업 당일 suno.com/pricing 화면을 기준으로 확인합니다.</span></li>
+    </ul>
+  </div>
+</section>
+
+<!-- ============ MISSION ============ -->
+<section class="block" id="mission">
+  <div class="stage-head"><div class="badge">GO</div><h2>실습 미션</h2></div>
+  <p class="stage-sub">끝낸 항목을 눌러 체크하세요. 이 체크는 이 화면에서만 유지됩니다.</p>
+  <div class="panel">
+    <div class="progress"><div class="track" id="m-track"></div><output id="m-out">0 / 6</output></div>
+    <ul class="mission" id="m-list">
+      <li><label><input type="checkbox"><span>QR 코드로 Suno 앱을 설치하고 로그인했다</span></label></li>
+      <li><label><input type="checkbox"><span>분위기와 후렴 문구를 정해 가사 프롬프트 빈칸을 채웠다</span></label></li>
+      <li><label><input type="checkbox"><span>AI가 쓴 가사를 소리 내어 읽고 어색한 줄을 직접 고쳤다</span></label></li>
+      <li><label><input type="checkbox"><span>AI가 제안한 스타일 프롬프트 중 하나를 골랐다</span></label></li>
+      <li><label><input type="checkbox"><span>Custom 모드에서 곡을 생성하고 두 곡 중 하나를 골랐다</span></label></li>
+      <li><label><input type="checkbox"><span>한 가지만 바꿔 다시 생성하고, 무엇이 달라졌는지 한 줄로 적었다</span></label></li>
+    </ul>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  요금제, 모델, 화면 구성은 수시로 바뀝니다. 수업 당일 Suno 앱과 suno.com의 안내를 우선하세요. 공식 안내: suno.com
+</footer>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script>
+(function () {
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+
+  /* ---------- toast + copy ---------- */
+  var toastEl = $('#toast'), toastTimer;
+  function toast(msg) {
+    toastEl.textContent = msg;
+    toastEl.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { toastEl.classList.remove('show'); }, 1600);
+  }
+  function fallbackCopy(text) {
+    var ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).then(function () { return true; }, function () { return fallbackCopy(text); });
+    }
+    return Promise.resolve(fallbackCopy(text));
+  }
+  $$('.copy').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var t = $(btn.getAttribute('data-target'));
+      if (!t) return;
+      copyText(t.textContent).then(function (ok) {
+        toast(ok ? '복사했습니다' : '복사하지 못했습니다. 글을 길게 눌러 직접 복사하세요');
+      });
+    });
+  });
+
+  /* ---------- pixel icons ---------- */
+  var ICONS = {
+    note: [
+      '..########',
+      '..########',
+      '..##....##',
+      '..##....##',
+      '..##....##',
+      '..##....##',
+      '####..####',
+      '####..####'
+    ],
+    phone: [
+      '.########.',
+      '.#++++++#.',
+      '.#++++++#.',
+      '.#++++++#.',
+      '.#++++++#.',
+      '.#++++++#.',
+      '.#++++++#.',
+      '.#++++++#.',
+      '.###..###.',
+      '.########.'
+    ],
+    pencil: [
+      '......###.',
+      '.....#++##',
+      '....#++#.#',
+      '...#++#.#.',
+      '..#++#.#..',
+      '.#++#.#...',
+      '#++#.#....',
+      '###.#.....',
+      '##........',
+      '#.........'
+    ],
+    play: [
+      '##........',
+      '####......',
+      '######....',
+      '########..',
+      '##########',
+      '########..',
+      '######....',
+      '####......',
+      '##........'
+    ]
+  };
+  function drawIcon(name) {
+    var map = ICONS[name]; if (!map) return '';
+    var w = map[0].length, h = map.length, out = '';
+    for (var y = 0; y < h; y++) for (var x = 0; x < w; x++) {
+      var c = map[y].charAt(x);
+      if (c === '#') out += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="currentColor"/>';
+      else if (c === '+') out += '<rect x="' + x + '" y="' + y + '" width="1" height="1" fill="var(--pink)"/>';
+    }
+    return '<svg viewBox="0 0 ' + w + ' ' + h + '" width="44" height="44" shape-rendering="crispEdges" aria-hidden="true">' + out + '</svg>';
+  }
+  $$('[data-icon]').forEach(function (el) { el.innerHTML = drawIcon(el.getAttribute('data-icon')); });
+
+  /* ---------- hero equalizer ---------- */
+  var eq = $('#eq');
+  for (var i = 0; i < 12; i++) {
+    var b = document.createElement('div');
+    b.className = 'bar';
+    b.style.setProperty('--d', (-((i * 0.37) % 1.2)).toFixed(2) + 's');
+    b.style.setProperty('--off', (20 + ((i * 37) % 50)) + '%');
+    b.style.animationDuration = (0.9 + ((i * 13) % 7) / 10).toFixed(1) + 's';
+    eq.appendChild(b);
+  }
+
+  /* ---------- mission checklist ---------- */
+  var boxes = $$('#m-list input');
+  var track = $('#m-track');
+  boxes.forEach(function () { track.appendChild(document.createElement('i')); });
+  function updateMission() {
+    var done = boxes.filter(function (c) { return c.checked; }).length;
+    $$('i', track).forEach(function (cell, idx) { cell.className = idx < done ? 'on' : ''; });
+    $('#m-out').textContent = done + ' / ' + boxes.length;
+    if (done === boxes.length) toast('모든 미션을 마쳤습니다');
+  }
+  boxes.forEach(function (c) { c.addEventListener('change', updateMission); });
+  updateMission();
+})();
+</script>
+</body>
+</html>
