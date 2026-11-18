@@ -1,0 +1,371 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<meta name="description" content="충북상업정보고등학교 2026년 11월 19일. AI와 문답하며 나를 정리하고, 미리캔버스로 6장 자기소개 PPT를 만드는 실습 강의안.">
+<title>AI로 만드는 자기소개 PPT · 충북상업정보고등학교</title>
+<style>
+@font-face{font-family:"Pretendard";src:url("https://ankiyong.github.io/50plus-ai-github-pages/assets/Pretendard-Regular.otf") format("opentype");font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:"Pretendard Black";src:url("https://ankiyong.github.io/50plus-ai-github-pages/assets/Pretendard-Black.otf") format("opentype");font-weight:900;font-style:normal;font-display:swap}
+:root{--ink:#15173f;--cream:#fff9df;--yellow:#ffe43e;--purple:#8952d0;--cyan:#23d7e6;--body:#3e4059;--lilac:#e6d8ff;--shell:#25204c}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--shell);color:var(--ink);font-family:"Pretendard";font-weight:400;font-synthesis:none}button,pre{font:inherit}button,a{touch-action:manipulation}button{cursor:pointer;color:inherit}button:disabled{cursor:default;opacity:.4}h1,h2,h3,p,ol,ul{margin:0}h1,h2,h3,b,strong,.brand,.tab,.button,.step-number,.outcome-number{font-family:"Pretendard Black";font-weight:900}h1,h2,h3,p,li{word-break:keep-all;overflow-wrap:break-word}button:focus-visible,a:focus-visible,[tabindex]:focus-visible{outline:3px solid #0099a8;outline-offset:4px}[hidden]{display:none!important}a{color:inherit}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
+.toolbar{min-height:66px;display:flex;align-items:center;gap:20px;padding:11px 25px;color:#fff;border-bottom:1px solid #514a6d}.brand{font-size:17px;white-space:nowrap}.brand small{font-family:"Pretendard";font-weight:400;font-size:11px;letter-spacing:.12em;display:block;color:#cfc2e6;margin-bottom:3px}.tabs{display:flex;gap:7px;align-items:center;margin-left:auto}.tab,.tool{border:1px solid #8e82ab;background:transparent;color:#eee8fa;padding:9px 13px;border-radius:4px;font-size:13px;white-space:nowrap}.tab[aria-selected="true"]{color:var(--ink);background:var(--yellow);border-color:var(--yellow)}.tab span{opacity:.65;margin-right:6px}.tool{font-family:"Pretendard";font-weight:400}.tab:hover:not([aria-selected="true"]),.tool:hover{background:#403562}.toolbar-divider{height:26px;width:1px;background:#625476}
+.deck{display:grid;place-items:center;min-height:calc(100dvh - 128px);padding:14px 24px 18px}.slide{--sw:min(calc(100vw - 48px),calc((100dvh - 164px)*16/9),1500px);container-type:inline-size;position:relative;width:var(--sw);aspect-ratio:16/9;display:flex;flex-direction:column;gap:1.4cqw;padding:3cqw 3.5cqw 2.5cqw;background:var(--cream);border:3px solid var(--ink);box-shadow:9px 9px 0 #0f1231;overflow:hidden;animation:appear .18s ease-out}.slide:before{content:"";position:absolute;inset:0 0 auto;height:9px;background:linear-gradient(90deg,var(--yellow) 0 54%,var(--cyan) 54% 74%,var(--purple) 74%)}.slidehead{display:flex;align-items:center;justify-content:space-between;font-size:1cqw;color:#5c5373;letter-spacing:.055em}.slidehead b{color:#694199;font-size:1.1cqw}.slide h2{font-size:3.4cqw;line-height:1.2;letter-spacing:-.035em}.subtitle{font-size:1.45cqw;line-height:1.6;color:var(--body)}.slide-title-row{display:flex;align-items:center;justify-content:space-between;gap:15px}.section-tag{font-size:1.05cqw;border:2px solid var(--ink);padding:.35cqw .65cqw;background:var(--lilac);white-space:nowrap}.button{display:inline-flex;align-items:center;justify-content:center;gap:.6em;padding:.65cqw 1.1cqw;border:2px solid var(--ink);box-shadow:3px 3px 0 var(--ink);background:var(--yellow);color:var(--ink);font-size:1.25cqw;line-height:1.35;text-decoration:none;border-radius:3px}.button.white{background:#fffef7}.button:hover{transform:translateY(-1px)}.button:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}.button svg,.small-button svg{width:1.05em;height:1.05em;flex:none}.actions{display:flex;align-items:center;gap:1cqw;flex-wrap:wrap}.ribbon{padding:.75cqw 1.2cqw;border-left:6px solid var(--ink);background:#fff09a;font-size:1.3cqw;line-height:1.5}.ribbon b{font-size:1.35cqw}.muted{color:#645975}
+.cover{background:var(--lilac)}.cover-grid{display:grid;grid-template-columns:1.55fr .8fr;gap:3cqw;align-items:center;flex:1;min-height:0}.eyebrow{display:inline-block;background:var(--ink);color:#fffef6;padding:.4cqw .8cqw;font-size:1.08cqw;letter-spacing:.03em}.cover h1{font-size:5.65cqw;line-height:1.16;letter-spacing:-.045em;margin:1.5cqw 0 1.8cqw}.cover mark{background:var(--yellow);color:var(--ink);padding:0 .13em;box-decoration-break:clone}.cover-lead{font-size:2.05cqw;line-height:1.6;color:var(--body);margin-bottom:2cqw}.cover-meta{display:flex;gap:1.5cqw;flex-wrap:wrap;font-size:1.15cqw;color:#53465f;margin-top:1.5cqw}.cover-result{background:var(--cream);border:3px solid var(--ink);box-shadow:7px 7px 0 #5a318b;transform:rotate(2deg);padding:1.8cqw 2cqw;position:relative}.result-label{font-size:1.1cqw;border-bottom:2px solid var(--ink);padding-bottom:.75cqw}.outcome{display:flex;align-items:baseline;justify-content:center;gap:.5cqw;margin:.25cqw 0}.outcome-number{font-size:12cqw;line-height:1.08;letter-spacing:-.07em}.outcome-unit{font-family:"Pretendard Black";font-weight:900;font-size:2.6cqw}.result-title{font-family:"Pretendard Black";font-weight:900;font-size:2.15cqw;line-height:1.3;letter-spacing:-.03em;text-align:center}.result-detail{margin-top:1.2cqw;font-size:1.2cqw;line-height:1.8;text-align:center;color:var(--body)}.result-stamp{position:absolute;right:-1.1cqw;top:-1.15cqw;background:var(--cyan);border:2px solid var(--ink);padding:.4cqw .65cqw;font-family:"Pretendard Black";font-weight:900;font-size:1.25cqw;transform:rotate(-6deg)}.cover-bottom{font-size:1.05cqw;color:#625475;display:flex;justify-content:space-between;align-items:center}
+.flow-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.3cqw;flex:1;min-height:0;align-items:stretch;margin:.2cqw 0}.flow-card{display:flex;flex-direction:column;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink);background:#fffef7;padding:1.35cqw 1.15cqw;min-width:0}.flow-card:nth-child(1){background:#eee2ff}.flow-card:nth-child(2){background:#dbf6f8}.flow-card:nth-child(3){background:#fff09a}.flow-card:nth-child(4){background:#f6edff}.flow-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.1cqw}.step-number{font-size:2.7cqw;line-height:1;letter-spacing:-.06em}.step-label{font-size:.95cqw;border:1px solid var(--ink);padding:.3cqw .4cqw;background:#fffef7}.flow-card h3{font-size:1.7cqw;line-height:1.35;letter-spacing:-.03em;margin-bottom:.8cqw}.flow-card p{font-size:1.2cqw;line-height:1.65;color:var(--body)}.flow-result{margin-top:auto;padding-top:.8cqw;border-top:1px solid #74658e;font-size:1.05cqw;line-height:1.5}.flow-result b{display:block;margin-top:.2cqw;font-size:1.2cqw}.flow-note{display:flex;align-items:center;justify-content:space-between;gap:1cqw;background:#e9e0f4;padding:.8cqw 1cqw;border-left:6px solid var(--purple);font-size:1.2cqw;line-height:1.5}.flow-note strong{font-size:1.3cqw}.flow-note .button{font-size:1.05cqw;padding:.45cqw .85cqw;flex:none}
+.prompt-layout{display:grid;grid-template-columns:.8fr 2.05fr;gap:1.65cqw;flex:1;min-height:0}.prompt-side{display:flex;flex-direction:column;gap:1.15cqw;min-height:0}.side-label{display:inline-block;font-size:1.05cqw;color:#694199;letter-spacing:.07em}.prompt-side h3{font-size:2.15cqw;line-height:1.4;letter-spacing:-.04em}.side-steps{list-style:none;padding:0;display:grid;gap:.9cqw;font-size:1.25cqw;line-height:1.55}.side-steps li{display:flex;gap:.6cqw;align-items:flex-start}.side-steps span{flex:none;font-family:"Pretendard Black";font-weight:900;color:#71439c}.side-callout{border:2px solid var(--ink);background:#e9dafa;padding:1cqw;font-size:1.15cqw;line-height:1.65;margin-top:auto}.side-callout strong{display:block;font-size:1.3cqw;margin-bottom:.35cqw}.prompt{display:flex;flex-direction:column;min-height:0;background:#fdfbf5;border:2px solid var(--ink);box-shadow:4px 4px 0 var(--ink)}.prompthead{background:#e9e0f4;padding:.55cqw .85cqw;display:flex;align-items:center;justify-content:space-between;gap:.8cqw;border-bottom:1px solid #aaa0b9;flex:none}.prompt-label{font-size:1.08cqw}.prompt-actions{display:flex;gap:.5cqw;flex-wrap:wrap}.small-button{display:inline-flex;align-items:center;justify-content:center;gap:.45em;background:#fffef7;border:1.5px solid var(--ink);padding:.4cqw .65cqw;font-size:1.05cqw;border-radius:2px;white-space:nowrap}.small-button.primary{background:var(--yellow);font-family:"Pretendard Black";font-weight:900}.small-button:hover{background:#fff09a}.small-button:disabled{opacity:.65}.prompt-text{white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;overflow:auto;overscroll-behavior:contain;margin:0;padding:1cqw 1.3cqw;min-height:0;flex:1;font-size:1.37cqw;line-height:1.65;tab-size:2;scrollbar-color:#8d6daa #e9e0f4;scrollbar-width:thin}.prompt-foot{padding:.5cqw .9cqw;border-top:1px solid #cbc1d5;font-size:.94cqw;color:#5c5373;background:#f7f0e6;flex:none}.six-list{display:grid;gap:.55cqw;list-style:none;padding:0}.six-list li{display:flex;gap:.65cqw;align-items:center;padding:.45cqw .6cqw;background:#e9dafa;font-size:1.15cqw;line-height:1.4}.six-list b{background:var(--ink);color:white;min-width:1.8cqw;text-align:center;padding:.1cqw .25cqw;font-size:1.02cqw}.six-list li:nth-child(3n+2){background:#d5f2f3}.six-list li:last-child{background:#fff09a}.six-label{font-size:1.5cqw!important}
+.footer{height:62px;display:flex;align-items:center;gap:18px;padding:9px 26px;color:white}.footer button{padding:9px 17px;font-size:14px;border:1px solid #9b8bba;background:transparent;color:white;border-radius:4px}.footer button:hover:not(:disabled){background:#403562}.footer button:last-child{background:var(--yellow);color:var(--ink);border-color:var(--yellow)}.progress{height:5px;background:#655a81;flex:1;overflow:hidden}.progress span{display:block;background:var(--yellow);height:100%;transition:width .18s}.count{min-width:50px;font-size:14px;font-variant-numeric:tabular-nums}.footer-tip{font-size:12px;color:#c7bbd9;white-space:nowrap}
+dialog{border:3px solid var(--ink);padding:0;background:var(--cream);color:var(--ink);width:min(1080px,94vw);max-width:94vw;max-height:91dvh;box-shadow:8px 8px 0 #0004}dialog::backdrop{background:#14102de0}.dialoghead{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:17px 22px;background:var(--lilac);border-bottom:2px solid var(--ink)}.dialoghead h2{font-size:23px;line-height:1.25}.dialoghead .small-button{font-size:14px;padding:9px 13px}.modal-prompt{font-size:20px;line-height:1.8;padding:24px 30px;max-height:calc(91dvh - 155px);min-width:0;white-space:pre-wrap;word-break:keep-all;overflow-wrap:anywhere;overflow:auto;margin:0}.dialogfoot{padding:11px 22px;border-top:1px solid #b4a9c1;font-size:13px;color:#5c5373}.toast{position:fixed;left:50%;bottom:83px;transform:translateX(-50%);padding:13px 22px;color:#fff;background:var(--ink);border:2px solid #fff;box-shadow:4px 4px 0 #0003;z-index:100;max-width:calc(100vw - 32px);text-align:center;font-size:16px;line-height:1.5}.copy-fallback{position:fixed;left:0;top:0;width:1px;height:1px;opacity:0}.no-js{padding:20px;color:#fff;background:#6b305a;text-align:center}
+@keyframes appear{from{opacity:.4;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+@media(max-width:760px){.toolbar{padding:10px 12px;gap:8px;flex-wrap:wrap;min-height:70px}.brand{font-size:14px}.brand small{font-size:9px}.toolbar-divider{display:none}.tabs{order:3;width:100%;justify-content:space-between;gap:5px}.tab{padding:8px 7px;font-size:12px;flex:1}.tab span{display:none}.tool{margin-left:auto;font-size:12px;padding:8px 10px}.deck{padding:13px 12px 16px;min-height:calc(100dvh - 168px)}.slide{width:100%;height:auto;aspect-ratio:auto;min-height:calc(100dvh - 198px);padding:28px 20px 22px;gap:18px;overflow:visible;container-type:normal;box-shadow:4px 4px 0 #0f1231}.slide:before{height:7px}.slidehead{font-size:10px;gap:8px;letter-spacing:0}.slidehead b{font-size:11px}.slide h2{font-size:29px;line-height:1.25}.subtitle{font-size:15px}.section-tag{font-size:12px;padding:5px 8px}.button{padding:11px 15px;font-size:15px}.actions{gap:12px}.ribbon,.ribbon b{font-size:14px}.ribbon{padding:12px}.cover-grid{grid-template-columns:1fr;gap:28px}.eyebrow{font-size:12px;padding:6px 9px}.cover h1{font-size:39px;line-height:1.22;margin:20px 0;letter-spacing:-.045em}.cover-lead{font-size:21px;margin-bottom:20px}.cover-meta{font-size:13px;gap:9px;margin-top:16px}.cover-result{transform:rotate(1deg);padding:18px 22px;box-shadow:5px 5px 0 #5a318b;max-width:340px;justify-self:center;width:90%;margin-bottom:12px}.result-label{font-size:12px;padding-bottom:9px}.outcome{margin:4px 0;gap:8px}.outcome-number{font-size:92px}.outcome-unit{font-size:27px}.result-title{font-size:25px}.result-detail{font-size:14px;margin-top:12px}.result-stamp{right:-10px;top:-12px;font-size:14px;padding:5px 9px}.cover-bottom{font-size:12px;gap:10px}.flow-grid{grid-template-columns:1fr 1fr;gap:14px;flex:initial;margin:0}.flow-card{padding:17px 14px;min-height:250px;box-shadow:3px 3px 0 var(--ink)}.flow-top{margin-bottom:15px}.step-number{font-size:31px}.step-label{font-size:10px;padding:4px}.flow-card h3{font-size:19px;margin-bottom:10px}.flow-card p{font-size:14px;line-height:1.65}.flow-result{font-size:12px;padding-top:13px;margin-top:15px}.flow-result b{font-size:13px;margin-top:4px}.flow-note{padding:12px;font-size:14px;gap:12px;align-items:flex-start;flex-direction:column}.flow-note strong{font-size:15px}.flow-note .button{font-size:13px;padding:8px 12px}.prompt-layout{grid-template-columns:1fr;gap:18px;flex:initial}.prompt-side{gap:13px}.side-label{font-size:12px}.prompt-side h3{font-size:24px}.side-steps{font-size:15px;gap:8px}.side-steps li{gap:8px}.side-callout{padding:13px;font-size:14px;margin-top:0}.side-callout strong{font-size:16px;margin-bottom:6px}.prompthead{padding:10px;gap:9px;flex-wrap:wrap}.prompt-label{font-size:13px}.prompt-actions{gap:6px}.small-button{font-size:12px;padding:8px 10px}.prompt-text{font-size:16px;line-height:1.75;padding:16px;max-height:57dvh;min-height:210px;flex:auto}.prompt-foot{font-size:12px;padding:10px 12px}.six-list{grid-template-columns:1fr 1fr;gap:8px}.six-list li{font-size:13px;padding:8px;gap:8px}.six-list b{min-width:22px;font-size:12px;padding:2px 4px}.six-label{font-size:18px!important}.footer{height:62px;padding:9px 12px;gap:10px;position:sticky;bottom:0;background:var(--shell);z-index:10}.footer button{padding:9px 12px;font-size:13px}.footer-tip{display:none}.count{font-size:12px;min-width:40px}.dialoghead{padding:14px;gap:10px;align-items:flex-start}.dialoghead h2{font-size:20px}.dialoghead .prompt-actions{flex-direction:column}.dialoghead .small-button{font-size:12px;padding:8px 11px}.modal-prompt{font-size:17px;line-height:1.8;padding:19px;max-height:calc(91dvh - 170px)}.dialogfoot{padding:11px 14px;font-size:12px}.toast{font-size:14px;bottom:78px;padding:12px 16px}}
+@media(max-width:370px){.cover h1{font-size:34px}.flow-grid{grid-template-columns:1fr}.flow-card{min-height:0}.flow-result{margin-top:12px}.slide-title-row{align-items:flex-start}.slide h2{font-size:26px}.section-tag{font-size:10px}.six-list{grid-template-columns:1fr}.toolbar .brand{font-size:13px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media print{body{background:white}.toolbar,.footer,.toast,dialog,.actions,.prompt-actions,.flow-note .button{display:none!important}.deck{display:block;padding:0}.slide,.slide[hidden]{display:flex!important;width:277mm;height:156mm;aspect-ratio:16/9;break-after:page;page-break-after:always;border:1px solid var(--ink);box-shadow:none;margin:0;--sw:277mm;overflow:visible}.slide:last-child{break-after:auto}.prompt-text{overflow:visible;font-size:12px!important;max-height:none}.slide:has(#prompt-text-2){height:auto;min-height:156mm}.slide:has(#prompt-text-2) .prompt-layout{display:block}.slide:has(#prompt-text-2) .prompt-side{display:none}@page{size:A4 landscape;margin:10mm}}
+</style>
+</head>
+<body>
+<noscript><div class="no-js">슬라이드 이동과 프롬프트 복사를 사용하려면 브라우저에서 JavaScript를 켜 주세요.</div></noscript>
+<header class="toolbar">
+  <div class="brand"><small>CHUNGBUK · 2026.11.19</small>AI 자기소개 실습</div>
+  <nav class="tabs" role="tablist" aria-label="강의 슬라이드 선택">
+    <button class="tab" role="tab" id="tab-1" aria-controls="slide-1" aria-selected="true" data-go="0"><span>01</span>표지</button>
+    <button class="tab" role="tab" id="tab-2" aria-controls="slide-2" aria-selected="false" data-go="1"><span>02</span>흐름</button>
+    <button class="tab" role="tab" id="tab-3" aria-controls="slide-3" aria-selected="false" data-go="2"><span>03</span>프롬프트 1</button>
+    <button class="tab" role="tab" id="tab-4" aria-controls="slide-4" aria-selected="false" data-go="3"><span>04</span>프롬프트 2</button>
+  </nav>
+  <span class="toolbar-divider" aria-hidden="true"></span>
+  <button class="tool" id="fullscreen-button" type="button" aria-label="전체 화면으로 보기">전체 화면</button>
+</header>
+<main class="deck" id="deck">
+  <section class="slide cover" id="slide-1" role="tabpanel" aria-labelledby="tab-1" tabindex="-1">
+    <div class="slidehead"><b>AI × 미리캔버스</b><span>충북상업정보고등학교</span></div>
+    <div class="cover-grid">
+      <div>
+        <span class="eyebrow">취업목표를 소개하는 AI 실습</span>
+        <h1>내 이야기로<br><mark>자기소개 PPT</mark></h1>
+        <p class="cover-lead">AI와 나를 정리하고,<br>미리캔버스로 완성하기</p>
+        <div class="actions"><button class="button" data-go="1">강의 시작 <span aria-hidden="true">→</span></button></div>
+        <div class="cover-meta"><b>충북상업정보고등학교</b><span>2026년 11월 19일 목요일</span></div>
+      </div>
+      <div class="cover-result">
+        <span class="result-stamp">오늘의 결과물</span>
+        <p class="result-label">나의 목표 · 경험 · 강점 · 계획</p>
+        <div class="outcome"><span class="outcome-number">6</span><span class="outcome-unit">장</span></div>
+        <p class="result-title">자기소개<br>프레젠테이션</p>
+        <p class="result-detail">프롬프트 2개로 내용 정리<br>표지를 포함한 6장 PPT 제작</p>
+      </div>
+    </div>
+    <div class="cover-bottom"><span>경험은 내가, 정리는 AI와 함께</span><span>← → 키로 이동</span></div>
+  </section>
+
+  <section class="slide" id="slide-2" role="tabpanel" aria-labelledby="tab-2" tabindex="-1" hidden>
+    <div class="slidehead"><b>01 · 제작 흐름</b><span>충북상업정보고등학교</span></div>
+    <div><h2>오늘의 제작 흐름</h2><p class="subtitle">내 경험을 정리하고, 나를 보여 주는 발표자료로 완성합니다.</p></div>
+    <div class="flow-grid">
+      <article class="flow-card"><div class="flow-top"><span class="step-number">01</span><span class="step-label">프롬프트 1</span></div><h3>AI와<br>나를 알아보기</h3><p>질문에 하나씩 답하며<br>관심·경험·강점 정리<br>취업목표와 계획 결정</p><div class="flow-result">정보 수집 · 목표와 계획<b>자기소개 기초정보</b></div></article>
+      <article class="flow-card"><div class="flow-top"><span class="step-number">02</span><span class="step-label">프롬프트 2</span></div><h3>이야기를<br>6장 원고로 만들기</h3><p>계기·경험·성장을 연결<br>목표와 포부를 더해<br>슬라이드별 내용 구성</p><div class="flow-result">이야기 구성 · 원고 작성<b>표지 포함 6장 원고</b></div></article>
+      <article class="flow-card"><div class="flow-top"><span class="step-number">03</span><span class="step-label">미리캔버스</span></div><h3>PPT를 만들고<br>직접 다듬기</h3><p>원고를 넣고 6장 설정<br>디자인과 사진 선택<br>내용·문구·배치 수정</p><div class="flow-result">PPT 제작 · 내용과 디자인 수정<b>나의 자기소개 PPT</b></div></article>
+      <article class="flow-card"><div class="flow-top"><span class="step-number">04</span><span class="step-label">발표</span></div><h3>내 이야기로<br>발표하기</h3><p>화면에 맞춰 발표문 정리<br>시간·목소리·속도 점검<br>나의 말로 발표 연습</p><div class="flow-result">발표 준비 · 연습<b>PPT와 발표문 완성</b></div></article>
+    </div>
+    <div class="flow-note"><p><strong>두 프롬프트는 같은 AI 대화창에서 사용</strong><br>정리된 내용이 내 경험과 생각에 맞는지 직접 확인합니다.</p><button class="button" data-go="2">프롬프트 1로 시작 →</button></div>
+  </section>
+
+  <section class="slide" id="slide-3" role="tabpanel" aria-labelledby="tab-3" tabindex="-1" hidden>
+    <div class="slidehead"><b>02 · 프롬프트 1</b><span>정보 수집</span></div>
+    <div><h2>AI와 문답하며 나를 알아보기</h2><p class="subtitle">프롬프트를 복사해 AI에 붙여 넣고, 질문에 하나씩 답하세요.</p></div>
+    <div class="prompt-layout">
+      <aside class="prompt-side"><div><span class="side-label">이렇게 진행하세요</span><h3>내 경험으로<br>답하기</h3></div><ol class="side-steps"><li><span>01</span>프롬프트 전체 복사</li><li><span>02</span>AI 대화창에 붙여넣기</li><li><span>03</span>질문에 하나씩 답하기</li><li><span>04</span>정리한 내용 확인하기</li></ol><div class="side-callout"><strong>답변을 마친 뒤</strong>희망 직무와 취업목표,<br>준비 계획까지 정리한 후<br>프롬프트 2로 이동합니다.</div></aside>
+      <div class="prompt"><div class="prompthead"><b class="prompt-label">프롬프트 1 · 질문 시작하기</b><div class="prompt-actions"><button class="small-button" data-view="1" type="button">크게 보기</button><button class="small-button primary" data-copy="1" type="button" aria-label="프롬프트 1 전체 복사"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="8" width="12" height="13" rx="1.5"/><path d="M15 8V3H3v13h5"/></svg> 전체 복사</button></div></div><pre class="prompt-text" id="prompt-text-1" tabindex="0" aria-label="프롬프트 1 전체 내용">취업목표를 담은 자기소개 프레젠테이션을 만들려고 해.
+
+내 관심 분야, 강점, 실제 경험, 어려움을 해결한 경험,
+희망 직무, 현재 준비 상태를 파악할 수 있도록 질문해줘.
+
+다음 기준에 따라 진행해줘.
+
+- 한 번에 질문 하나씩 하고 내 답변을 기다려줘.
+- 답변이 추상적이면 구체적인 사례를 추가로 물어봐.
+- 내가 말하지 않은 경험이나 성과를 만들어 넣지 마.
+- 충분한 정보를 모으면 항목별로 정리해줘.
+- 내 답변에서 확인된 내용과 너의 해석·제안을 구분해줘.</pre><div class="prompt-foot">버튼을 누르면 프롬프트 전체가 복사됩니다.</div></div>
+    </div>
+  </section>
+
+  <section class="slide" id="slide-4" role="tabpanel" aria-labelledby="tab-4" tabindex="-1" hidden>
+    <div class="slidehead"><b>03 · 프롬프트 2</b><span>슬라이드별 제작 원고</span></div>
+    <div class="slide-title-row"><div><h2>표지 포함, 총 6장 원고 만들기</h2><p class="subtitle">내 답변을 확인한 뒤, 같은 AI 대화창에 이어서 입력하세요.</p></div><b class="section-tag">총 6장</b></div>
+    <div class="prompt-layout">
+      <aside class="prompt-side"><h3 class="six-label">6장 구성 한눈에 보기</h3><ol class="six-list"><li><b>1</b>취업목표 · 표지</li><li><b>2</b>관심을 갖게 된 계기</li><li><b>3</b>경험으로 보여 주는 강점</li><li><b>4</b>어려움 극복과 성장</li><li><b>5</b>목표와 실행계획</li><li><b>6</b>앞으로의 포부 · 마무리</li></ol><div class="side-callout"><strong>미리캔버스로 옮길 내용</strong>AI 결과 마지막에 정리된<br><b>슬라이드 제목 + 화면 문구</b><br>페이지 수는 <b>6장</b>으로 설정</div></aside>
+      <div class="prompt"><div class="prompthead"><b class="prompt-label">프롬프트 2 · 6장 원고 작성</b><div class="prompt-actions"><button class="small-button" data-view="2" type="button">크게 보기</button><button class="small-button primary" data-copy="2" type="button" aria-label="프롬프트 2 전체 복사"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="8" width="12" height="13" rx="1.5"/><path d="M15 8V3H3v13h5"/></svg> 전체 복사</button></div></div><pre class="prompt-text" id="prompt-text-2" tabindex="0" aria-label="프롬프트 2 전체 내용">지금까지 내가 답변하고 확인한 자기소개 내용을 바탕으로,
+미리캔버스에서 PPT를 만들 수 있도록 슬라이드별 제작 원고를 작성해줘.
+
+[분량]
+- 표지를 포함하여 총 6장으로 구성해줘.
+- 아래 6장 안에 도입부터 마무리까지 모두 담아줘.
+
+[슬라이드 구성]
+
+1장. 나의 취업목표 — 표지
+- 이름
+- 희망 분야와 직무
+- 나를 소개하는 한 문장
+
+2장. 이 분야에 관심을 갖게 된 계기
+- 관심을 갖게 된 수업, 실습, 활동 또는 경험
+- 해당 분야에 흥미를 느낀 이유
+- 희망 직무를 선택한 이유
+
+3장. 경험으로 보여 주는 나의 강점
+- 주요 경험과 내가 맡은 역할
+- 내가 직접 한 행동
+- 결과와 그 경험에서 드러난 강점
+- 희망 직무와 연결되는 역량
+
+4장. 어려움을 극복하며 배운 점
+- 경험 중 겪었던 어려움
+- 문제를 해결하기 위해 한 행동
+- 배운 점과 성장한 부분
+- 이후 달라진 태도나 행동
+
+5장. 목표 달성을 위한 실행계획
+- 단기·중기·장기 목표
+- 목표를 위해 준비할 구체적인 활동
+- 실행 일정과 진행 상황을 점검할 방법
+
+6장. 앞으로의 포부 — 마무리
+- 어떤 구성원으로 성장하고 싶은지
+- 앞으로 기여하고 싶은 점
+- 나의 취업목표와 핵심 강점을 정리한 마무리 메시지
+
+[각 슬라이드의 작성 형식]
+각 장을 다음 네 항목으로 구분해서 작성해줘.
+
+1. 슬라이드 제목
+2. 화면에 넣을 짧은 핵심 문구
+3. 사용할 시각 자료 제안
+4. 발표할 설명
+
+[작성 기준]
+- 한 슬라이드에는 하나의 핵심 메시지를 담아줘.
+- 화면 문구는 짧고 명확하게 작성해줘.
+- 자세한 설명은 ‘발표할 설명’에 담아줘.
+- 내가 말하지 않은 경험, 성과, 자격증, 수치를 추가하지 마.
+- 목표의 기간은 내가 정한 기준을 사용해줘.
+- 3장과 4장에서 같은 경험을 활용할 경우,
+  3장은 강점과 역량, 4장은 문제 해결과 성장에 초점을 맞춰줘.
+- 전체 내용이 관심과 계기, 경험과 성장, 목표와 계획의 흐름으로
+  자연스럽게 이어지도록 작성해줘.
+
+[마지막 출력]
+6장의 제작 원고를 작성한 뒤,
+미리캔버스에 붙여넣을 수 있도록
+각 슬라이드의 번호, 제목, 화면에 넣을 핵심 문구만
+1장부터 6장까지 순서대로 다시 정리해줘.</pre><div class="prompt-foot">아래로 스크롤해 전문 확인 · 복사 버튼은 보이지 않는 내용까지 모두 복사</div></div>
+    </div>
+  </section>
+</main>
+<footer class="footer" aria-label="슬라이드 이동">
+  <button type="button" id="previous-button" aria-label="이전 슬라이드">← 이전</button><span class="footer-tip">키보드 ← →</span><div class="progress" role="progressbar" aria-label="강의 진행" aria-valuemin="1" aria-valuemax="4" aria-valuenow="1"><span id="progress-fill" style="width:25%"></span></div><span class="count" id="slide-count" aria-live="polite">01 / 04</span><button type="button" id="next-button" aria-label="다음 슬라이드">다음 →</button>
+</footer>
+<dialog id="prompt-dialog" aria-labelledby="dialog-title"><div class="dialoghead"><h2 id="dialog-title">프롬프트</h2><div class="prompt-actions"><button class="small-button primary" id="dialog-copy" type="button"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="8" y="8" width="12" height="13" rx="1.5"/><path d="M15 8V3H3v13h5"/></svg> 전체 복사</button><button class="small-button" id="dialog-close" type="button" aria-label="프롬프트 크게 보기 닫기">닫기 ×</button></div></div><pre id="dialog-text" class="modal-prompt" tabindex="0"></pre><p class="dialogfoot">내용 전체를 확인하거나 복사한 뒤 AI 대화창에 붙여 넣으세요.</p></dialog>
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+<script>
+(() => {
+  'use strict';
+  const slides = [...document.querySelectorAll('.slide')];
+  const tabs = [...document.querySelectorAll('.tab')];
+  const previous = document.getElementById('previous-button');
+  const next = document.getElementById('next-button');
+  const count = document.getElementById('slide-count');
+  const progress = document.querySelector('.progress');
+  const fill = document.getElementById('progress-fill');
+  const dialog = document.getElementById('prompt-dialog');
+  const dialogText = document.getElementById('dialog-text');
+  const toast = document.getElementById('toast');
+  const fullScreen = document.getElementById('fullscreen-button');
+  const prompts = {1: document.getElementById('prompt-text-1').textContent, 2: document.getElementById('prompt-text-2').textContent};
+  let current = 0;
+  let dialogPrompt = 1;
+  let lastDialogTrigger = null;
+  let toastTimer;
+  const names = ['표지', '흐름', '프롬프트 1', '프롬프트 2'];
+  function showToast(message) {
+    clearTimeout(toastTimer); toast.textContent = message; toast.hidden = false;
+    toastTimer = setTimeout(() => {toast.hidden = true;}, 2900);
+  }
+  function go(index, updateHash = true) {
+    const i = Math.max(0, Math.min(slides.length - 1, index));
+    current = i;
+    slides.forEach((slide, n) => {slide.hidden = n !== i; slide.setAttribute('aria-hidden', String(n !== i));});
+    tabs.forEach((tab, n) => {tab.setAttribute('aria-selected', String(n === i)); tab.tabIndex = n === i ? 0 : -1;});
+    previous.disabled = i === 0; next.disabled = i === slides.length - 1;
+    count.textContent = String(i + 1).padStart(2, '0') + ' / 04';
+    fill.style.width = ((i + 1) / slides.length * 100) + '%';
+    progress.setAttribute('aria-valuenow', String(i + 1));
+    progress.setAttribute('aria-valuetext', names[i]);
+    if (updateHash) history.replaceState(null, '', '#slide-' + (i + 1));
+    if (window.matchMedia('(max-width: 760px)').matches) window.scrollTo({top: 0, behavior: 'auto'});
+  }
+  function fromHash() {const m = location.hash.match(/^#slide-([1-4])$/); go(m ? Number(m[1]) - 1 : 0, false);}
+  function openPrompt(key, trigger) {
+    dialogPrompt = Number(key); lastDialogTrigger = trigger || document.activeElement;
+    document.getElementById('dialog-title').textContent = '프롬프트 ' + key + ' · 전체 내용';
+    dialogText.textContent = prompts[key];
+    document.getElementById('dialog-copy').setAttribute('aria-label', '프롬프트 ' + key + ' 전체 복사');
+    if (!dialog.open) dialog.showModal();
+    dialogText.scrollTop = 0;
+  }
+  async function copyPrompt(key, button) {
+    const text = prompts[key];
+    if (!text) return;
+    button.disabled = true;
+    let copied = false;
+    try {
+      if (window.isSecureContext && navigator.clipboard && navigator.clipboard.writeText) {
+        try {await navigator.clipboard.writeText(text); copied = true;} catch (_) {}
+      }
+      if (!copied) {
+        const before = document.activeElement;
+        const ta = document.createElement('textarea'); ta.className = 'copy-fallback'; ta.value = text; ta.setAttribute('readonly', ''); ta.setAttribute('aria-label', '복사할 프롬프트');
+        (dialog.open ? dialog : document.body).appendChild(ta); ta.focus(); ta.select(); ta.setSelectionRange(0, ta.value.length);
+        try {copied = document.execCommand('copy');} catch (_) {}
+        ta.remove(); if (before && typeof before.focus === 'function') before.focus({preventScroll: true});
+      }
+      if (copied) {
+        showToast('프롬프트 ' + key + ' 전체를 복사했습니다. AI 대화창에 붙여 넣으세요.');
+      } else {
+        openPrompt(key, button);
+        const range = document.createRange(); range.selectNodeContents(dialogText);
+        const selection = window.getSelection(); selection.removeAllRanges(); selection.addRange(range);
+        showToast('자동 복사가 제한되어 내용을 선택했습니다. Ctrl+C 또는 ⌘C로 복사하세요.');
+      }
+    } finally {button.disabled = false;}
+  }
+  document.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => go(Number(button.dataset.go))));
+  document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', () => copyPrompt(button.dataset.copy, button)));
+  document.querySelectorAll('[data-view]').forEach(button => button.addEventListener('click', () => openPrompt(button.dataset.view, button)));
+  document.getElementById('dialog-copy').addEventListener('click', event => copyPrompt(dialogPrompt, event.currentTarget));
+  document.getElementById('dialog-close').addEventListener('click', () => dialog.close());
+  dialog.addEventListener('close', () => {if(lastDialogTrigger && lastDialogTrigger.isConnected) lastDialogTrigger.focus({preventScroll: true});});
+  dialog.addEventListener('click', event => {if (event.target !== dialog) return; const r=dialog.getBoundingClientRect(); if(event.clientX<r.left || event.clientX>r.right || event.clientY<r.top || event.clientY>r.bottom) dialog.close();});
+  previous.addEventListener('click', () => go(current - 1)); next.addEventListener('click', () => go(current + 1));
+  document.addEventListener('keydown', event => {
+    if (dialog.open || event.ctrlKey || event.metaKey || event.altKey || event.shiftKey) return;
+    if (event.target.closest('input, textarea, select, [contenteditable="true"], pre')) return;
+    if (window.getSelection()?.toString()) return;
+    let target;
+    if (event.key === 'ArrowRight' || event.key === 'PageDown') target = current + 1;
+    if (event.key === 'ArrowLeft' || event.key === 'PageUp') target = current - 1;
+    if (event.key === 'Home') target = 0;
+    if (event.key === 'End') target = slides.length - 1;
+    if (target !== undefined) {event.preventDefault(); const wasTab=event.target.classList.contains('tab'); go(target); if(wasTab) tabs[current].focus();}
+  });
+  window.addEventListener('hashchange', fromHash);
+  fullScreen.addEventListener('click', async () => {
+    try {if(document.fullscreenElement) await document.exitFullscreen(); else if(document.documentElement.requestFullscreen) await document.documentElement.requestFullscreen(); else showToast('브라우저의 전체 화면 기능을 사용해 주세요.');}
+    catch (_) {showToast('브라우저의 전체 화면 기능을 사용해 주세요.');}
+  });
+  document.addEventListener('fullscreenchange', () => {fullScreen.textContent = document.fullscreenElement ? '전체 화면 종료' : '전체 화면'; fullScreen.setAttribute('aria-label', fullScreen.textContent);});
+  fromHash();
+})();
+</script>
+<!-- Font license for the referenced original Pretendard files:
+Copyright (c) 2021, Kil Hyung-jin (https://github.com/orioncactus/pretendard),
+with Reserved Font Name 'Pretendard'.
+
+Copyright 2014-2021 Adobe (http://www.adobe.com/),
+with Reserved Font Name 'Source'.
+Source is a trademark of Adobe in the United States and/or other countries.
+
+Copyright (c) 2016 The Inter Project Authors (https://github.com/rsms/inter),
+with Reserved Font Name 'Inter'.
+Copyright 2021 The M+ FONTS Project Authors (https://github.com/coz-m/MPLUS_FONTS),
+with Reserved Font Name 'M PLUS 1'.
+
+This Font Software is licensed under the SIL Open Font License, Version 1.1.
+This license is copied below, and is also available with a FAQ at:
+https://scripts.sil.org/OFL
+
+
+—————————————————————————————-
+SIL OPEN FONT LICENSE Version 1.1 - 26 February 2007
+—————————————————————————————-
+PREAMBLE
+The goals of the Open Font License (OFL) are to stimulate worldwide
+development of collaborative font projects, to support the font creation
+efforts of academic and linguistic communities, and to provide a free and
+open framework in which fonts may be shared and improved in partnership
+with others.
+The OFL allows the licensed fonts to be used, studied, modified and
+redistributed freely as long as they are not sold by themselves. The
+fonts, including any derivative works, can be bundled, embedded,
+redistributed and/or sold with any software provided that any reserved
+names are not used by derivative works. The fonts and derivatives,
+however, cannot be released under any other type of license. The
+requirement for fonts to remain under this license does not apply
+to any document created using the fonts or their derivatives.
+DEFINITIONS
+"Font Software" refers to the set of files released by the Copyright
+Holder(s) under this license and clearly marked as such. This may
+include source files, build scripts and documentation.
+
+"Reserved Font Name" refers to any names specified as such after the
+copyright statement(s).
+
+"Original Version" refers to the collection of Font Software components as
+distributed by the Copyright Holder(s).
+"Modified Version" refers to any derivative made by adding to, deleting,
+or substituting — in part or in whole — any of the components of the
+Original Version, by changing formats or by porting the Font Software to a
+new environment.
+
+"Author" refers to any designer, engineer, programmer, technical
+writer or other person who contributed to the Font Software.
+PERMISSION & CONDITIONS
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of the Font Software, to use, study, copy, merge, embed, modify,
+redistribute, and sell modified and unmodified copies of the Font
+Software, subject to the following conditions:
+
+1) Neither the Font Software nor any of its individual components,
+in Original or Modified Versions, may be sold by itself.
+2) Original or Modified Versions of the Font Software may be bundled,
+redistributed and/or sold with any software, provided that each copy
+contains the above copyright notice and this license. These can be
+included either as stand-alone text files, human-readable headers or
+in the appropriate machine-readable metadata fields within text or
+binary files as long as those fields can be easily viewed by the user.
+3) No Modified Version of the Font Software may use the Reserved Font
+Name(s) unless explicit written permission is granted by the corresponding
+Copyright Holder. This restriction only applies to the primary font name as
+presented to the users.
+4) The name(s) of the Copyright Holder(s) or the Author(s) of the Font
+Software shall not be used to promote, endorse or advertise any
+Modified Version, except to acknowledge the contribution(s) of the
+Copyright Holder(s) and the Author(s) or with their explicit written
+permission.
+5) The Font Software, modified or unmodified, in part or in whole,
+must be distributed entirely under this license, and must not be
+distributed under any other license. The requirement for fonts to
+remain under this license does not apply to any document created
+using the Font Software.
+
+TERMINATION
+This license becomes null and void if any of the above conditions are
+not met.
+DISCLAIMER
+THE FONT SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO ANY WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT
+OF COPYRIGHT, PATENT, TRADEMARK, OR OTHER RIGHT. IN NO EVENT SHALL THE
+COPYRIGHT HOLDER BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
+INCLUDING ANY GENERAL, SPECIAL, INDIRECT, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF THE USE OR INABILITY TO USE THE FONT SOFTWARE OR FROM
+OTHER DEALINGS IN THE FONT SOFTWARE.
+
+
+-->
+</body>
+</html>
