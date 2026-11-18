@@ -209,7 +209,7 @@ dialog{border:3px solid var(--ink);padding:0;background:var(--cream);color:var(-
   }
   function fromHash() {const m = location.hash.match(/^#slide-([1-4])$/); go(m ? Number(m[1]) - 1 : 0, false);}
   function openPrompt(key, trigger) {
-    dialogPrompt = Number(key); lastDialogTrigger = trigger || document.activeElement;
+    dialogPrompt = Number(key); if (!dialog.open) lastDialogTrigger = trigger || document.activeElement;
     document.getElementById('dialog-title').textContent = '프롬프트 ' + key + ' · 전체 내용';
     dialogText.textContent = prompts[key];
     document.getElementById('dialog-copy').setAttribute('aria-label', '프롬프트 ' + key + ' 전체 복사');
